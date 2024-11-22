@@ -1,0 +1,28 @@
+/* General styling for icons */
+td a {
+    margin-right: 10px;  /* Space between icons */
+    font-size: 1.2rem;
+    text-decoration: none;
+}
+
+/* Specific color styles */
+.icon-edit i {
+    color: orange;
+}
+
+.icon-delete i {
+    color: red;
+}
+
+.icon-view i {
+    color: green;
+}
+
+.icon-payment i {
+    color: black;
+}
+
+/* Centering payment icon */
+.icon-payment {
+    text-align: center;
+}

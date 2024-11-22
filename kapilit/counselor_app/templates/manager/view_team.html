@@ -1,0 +1,215 @@
+
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	{% load static %}
+	<link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+	<link rel="stylesheet" href="{% static 'css/dashboard_style.css' %}">
+	<link rel="stylesheet" href="{% static 'css/message_box.css' %}">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+	<title>Kapil IT Hub</title>
+</head>
+<body>
+	<section id="sidebar">
+        <a href="#" class="brand">
+            <img src="{% static 'images/kapil_logo.png'%}" alt="Kapil IT Logo" class="kapil-it-logo">
+        </a>
+        <ul class="side-menu top">
+            <li class="active">
+                <a href="{% url 'manager_dashboard_page' %}">
+                    <i class='bx bxs-dashboard' ></i>
+                    <span class="text">Dashboard</span>
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'manager_dashboard_page' %}">
+                    <i class='bx bxs-message-dots' ></i>
+                    <span class="text">Students</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="#">
+                    <i class='bx bxs-message-dots' ></i>
+                    <span class="text">Message</span>
+                </a>
+            </li>
+            <li>
+                <a href="#" class="notification">
+                    <i class='bx bxs-bell' ></i>
+                    <span class="text">Notifications</span>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <i class='bx bxs-group' ></i>
+                    <span class="text">Team</span>
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'add_role' %}">
+                    <i class='bx bxs-group' ></i>
+                    <span class="text">Add Team</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="{% url 'view_team' %}">
+                    <i class='bx bxs-group' ></i>
+                    <span class="text">View Team</span>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <i class='bx bxs-cog' ></i>
+                    <span class="text">Settings</span>
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'manager_logout' %}" class="logout">
+                    <i class='bx bxs-log-out-circle' ></i>
+                    <span class="text">Logout</span>
+                </a>
+            </li>
+        </ul>
+    </section>
+	<section id="content">
+		<nav>
+			<i class='bx bx-menu' ></i>
+			<a href="#" class="nav-link">Email : {{manager_details.manager_email}}</a>
+		</nav>
+		<main>
+			<div class="head-title">
+				<div class="left">
+					<h1>Dashboard</h1>
+					<ul class="breadcrumb">
+						<li>
+							<a href="">Dashboard</a>
+						</li>
+						<li><i class='bx bx-chevron-right' ></i></li>
+						<li>
+							<a class="active" href="">Home</a>
+						</li>
+					</ul>
+				</div>
+				<a href="#" class="btn-download">
+					<i class='bx bxs-cloud-download' ></i>
+					<span class="text">Excel</span>&nbsp;&nbsp;
+					<i class='bx bxs-cloud-download' ></i>
+					<span class="text">Pdf</span>
+				</a>
+
+
+			</div>	
+
+			<ul class="box-info">
+                <li>
+					<i class='bx bxs-group' ></i>
+					<span class="text">
+						<h3>0</h3>
+						<p>Student Enrollments </p>
+					</span>
+				</li>
+				<li>
+					<i class='bx bxs-calendar-check' ></i>
+					<span class="text">
+						<h3>0</h3>
+						<p> Joined Students</p>
+					</span>
+				</li>
+				
+				<li>
+					<i class='bx bxs-dollar-circle' ></i>
+					<span class="text">
+						<h3>0</h3>
+						<p>Placed Candidates</p>
+					</span>
+				</li>
+			</ul>
+			{% if messages %}
+            <div class="alert alert-success">
+                {% for message in messages %}
+                    <p>{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+
+			<div class="table-data">
+				<div class="order">
+					<div class="head">
+						<h3>Employee Details</h3>
+						<i class='bx bx-search' ></i>
+						<i class='bx bx-filter' ></i>
+					</div>
+
+					<table>
+						<thead>
+							<tr>
+								<th>S.No.</th>
+								<th>Name</th>
+								<th>Email</th>
+								<th>Employee ID</th>
+								<th>Role</th>
+								<th>Action</th>
+							</tr>
+						</thead>
+
+						{% if no_employee_data %}
+                <p>No data related to employees.</p>
+            {% else %}
+                {% for emp in employee_list %}
+                <tbody>
+                    <tr>
+                    	<td>
+                            <p>{{ emp.sno }}</p>
+                        </td>
+                        <td>
+                            <p>{{ emp.name }}</p>
+                        </td>
+                        <td>
+                            <p>{{ emp.email }}</p>
+                        </td>
+                        <td>
+                            <p>{{ emp.employee_id }}</p>
+                        </td>
+                        <td>
+                            {% if emp.role_type == 'counselor' %}
+                                <p>Counselor</p>
+                            {% elif emp.role_type == 'developer' %}
+                                <p>Developer</p>
+                            {% elif emp.role_type == 'analyst' %}
+                                <p>Analyst</p>
+                            {% elif emp.role_type == 'java_analyst' %}
+                                <p>Java Analyst</p>
+                            {% elif emp.role_type == 'python_analyst' %}
+                                <p>Python Analyst</p>
+                            {% elif emp.role_type == 'trainer' %}
+                                <p>Trainer</p>
+                            {% endif %}
+                        </td>
+                        
+                        <td>
+						    <!-- Edit Icon -->
+						    <a href="{% url 'edit_role_type' emp.role_id %}" class="btn btn-outline-primary btn-sm" title="Edit">
+						        <i class="fas fa-edit"></i>
+						    </a>
+						    <!-- Delete Icon -->
+						    <button class="btn btn-outline-danger btn-sm delete-btn" data-id="{{ emp.role_id }}" title="Delete">
+						        <i class="fas fa-trash-alt"></i>
+						    </button>
+						</td>
+
+                    </tr>
+                </tbody>
+                {% endfor %}
+            {% endif %}
+					</table>
+				</div>	
+			</div>
+</main>
+</section>
+</body>

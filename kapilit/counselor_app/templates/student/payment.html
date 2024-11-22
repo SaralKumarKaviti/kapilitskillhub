@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Method Selection</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/payment_style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/payment_container.css' %}">
+    <link rel="stylesheet" href="{% static 'css/modal_style.css' %}"> <!-- Add CSS for modal -->
+    <style>
+        /* Basic styling for modal */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1000; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0,0,0,0.7); /* Black w/ opacity */
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 90%; /* Set the width of the modal */
+            max-width: 600px; /* Increase the max width */
+            border-radius: 10px; /* Rounded corners */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            position: absolute; /* Use absolute positioning */
+            top: 50%; /* Move down 50% from the top */
+            left: 50%; /* Move to the center horizontally */
+            transform: translate(-50%, -50%); /* Offset up by half its height and left by half its width to center */
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .submit-btn {
+            background-color: #4CAF50; /* Green */
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .submit-btn:hover {
+            background-color: #45a049; /* Darker green */
+        }
+
+        .input-container {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="payment-container">
+        <h2>Select Your Payment Method</h2>
+        <form action="{% url 'register_payment_enrolled_student' student_id=student_id %}" method="POST" id="payment-form">
+            {% csrf_token %}
+            <div class="student-info">
+                <p><strong>Student Name:</strong> {{ student_name }}</p>
+                <p><strong>Course Name:</strong> {{ course_name }}</p>
+            </div>
+
+            <div class="radio-group">
+                <input type="radio" id="offline" name="payment_mode" value="offline" required onclick="openModal()">
+                <label for="offline">Offline</label>
+                
+                <input type="radio" id="online" name="payment_mode" value="online" required onclick="openModal()">
+                <label for="online">Online</label>
+            </div>
+        </form>
+    </div>
+
+    <div id="paymentModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h3>Payment Details</h3>
+            <div class="input-container">
+                <label>Registration Fee:</label>
+                <input type="text" id="registration-fee" value="{{ registration_fee }}" readonly>
+            </div>
+            <div class="input-container">
+                <label>Total Fee:</label>
+                <input type="text" id="total-fee" value="{{ total_amount }}" readonly>
+            </div>
+            <div class="input-container">
+                <label>Installments:</label>
+                <input type="number" class="installment" placeholder="Enter installment amount" oninput="updateAmounts()">
+                <button type="button" onclick="addInstallmentField()">+</button>
+            </div>
+            <div class="input-container">
+                <label>Total Paid:</label>
+                <input type="text" id="total-paid" value="0" readonly>
+            </div>
+            <div class="input-container">
+                <label>Pending Amount:</label>
+                <input type="text" id="pending-amount" readonly>
+            </div>
+            <button type="submit" class="submit-btn" form="payment-form">Proceed to Payment</button>
+        </div>
+    </div>
+
+    <script>
+        function openModal() {
+            document.getElementById("paymentModal").style.display = "block"; // Show modal
+            updateAmounts(); // Initialize pending amount
+        }
+
+        function closeModal() {
+            document.getElementById("paymentModal").style.display = "none"; // Hide modal
+        }
+
+        function addInstallmentField() {
+            const container = document.getElementById("installment-container");
+            const input = document.createElement("input");
+            input.type = "number";
+            input.className = "installment";
+            input.placeholder = "Enter installment amount";
+            input.oninput = updateAmounts;
+            container.appendChild(input);
+        }
+
+        function updateAmounts() {
+            const totalFee = parseFloat(document.getElementById("total-fee").value);
+            const registrationFee = parseFloat(document.getElementById("registration-fee").value);
+            const installmentInputs = document.querySelectorAll(".installment");
+            let totalPaid = 0;
+
+            installmentInputs.forEach(input => {
+                const amount = parseFloat(input.value) || 0;
+                totalPaid += amount;
+            });
+
+            const pendingAmount = totalFee - registrationFee - totalPaid;
+            document.getElementById("total-paid").value = totalPaid.toFixed(2);
+            document.getElementById("pending-amount").value = pendingAmount.toFixed(2);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
+    <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'css/dashboard_style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/message_box.css' %}">
+    <link rel="stylesheet" href="{% static 'css/icons_style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>Kapil IT Hub</title>
+    <style>
+    .head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .head h3 {
+        margin: 0;
+        font-size: 1.5rem;
+    }
+
+    .head i {
+        font-size: 1.2rem;
+        color: #333;
+        cursor: pointer;
+    }
+
+    .head i:hover {
+        color: #007bff; /* Change color on hover */
+    }
+
+    .pagination a.pagination-btn {
+    margin-right: 10px;  /* Adds space between buttons */
+    padding: 0px 10px;   /* Adds padding to the buttons */
+    text-decoration: none; /* Removes underline from the links */
+    color: #007bff;       /* Button text color */
+    border-radius: 5px;   /* Rounded corners for buttons */
+}
+
+.pagination a.pagination-btn:hover {
+    background-color: #f1f1f1;  /* Background color on hover */
+}
+
+.pagination .current {
+    margin-right: 15px; /* Adds space between the current page span and next/last buttons */
+    font-weight: bold;
+}
+
+</style>
+
+</head>
+<body>
+    <section id="sidebar">
+        <a href="#" class="brand">
+            <img src="{% static 'images/kapil_logo.png'%}" alt="Kapil IT Logo" class="kapil-it-logo">
+        </a>
+        <ul class="side-menu top">
+            <li class="active">
+                <a href="#">
+                    <i class='bx bxs-dashboard'></i>
+                    <span class="text">Dashboard</span>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <i class='bx bxs-message-dots'></i>
+                    <span class="text">Students</span>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <i class='bx bxs-message-dots'></i>
+                    <span class="text">View Students</span>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <i class='bx bxs-message-dots'></i>
+                    <span class="text">Message</span>
+                </a>
+            </li>
+            <li>
+                <a href="#" class="notification">
+                    <i class='bx bxs-bell'></i>
+                    <span class="text">Notifications</span>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <i class='bx bxs-group'></i>
+                    <span class="text">Team</span>
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'add_role' %}">
+                    <i class='bx bxs-group'></i>
+                    <span class="text">Add Team</span>
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'view_team' %}">
+                    <i class='bx bxs-group'></i>
+                    <span class="text">View Team</span>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <i class='bx bxs-cog'></i>
+                    <span class="text">Settings</span>
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'manager_logout' %}" class="logout">
+                    <i class='bx bxs-log-out-circle'></i>
+                    <span class="text">Logout</span>
+                </a>
+            </li>
+        </ul>
+    </section>
+    <section id="content">
+        <nav>
+            <i class='bx bx-menu'></i>
+            <a href="#" class="nav-link">Email: {{manager_details.manager_email}}</a>
+        </nav>
+        <main>
+            <div class="head-title">
+                <div class="left">
+                    <h1>Dashboard</h1>
+                    <ul class="breadcrumb">
+                        <li><a href="">Dashboard</a></li>
+                        <li><i class='bx bx-chevron-right'></i></li>
+                        <li><a class="active" href="">Home</a></li>
+                    </ul>
+                </div>
+                <a href="#" class="btn-download">
+                    <i class='bx bxs-cloud-download'></i>
+                    <span class="text">Excel</span>&nbsp;&nbsp;
+                    <i class='bx bxs-cloud-download'></i>
+                    <span class="text">Pdf</span>
+                </a>
+            </div>
+            <ul class="box-info">
+                <li>
+                    <i class='bx bxs-group'></i>
+                    <span class="text">
+                        <h3>{{ student_enrolled_count }}</h3>
+                        <p>Student Enrollments</p>
+                    </span>
+                </li>
+                <li>
+                    <i class='bx bxs-calendar-check'></i>
+                    <span class="text">
+                        <h3>0</h3>
+                        <p>Joined Students</p>
+                    </span>
+                </li>
+                <li>
+                    <i class='bx bxs-dollar-circle'></i>
+                    <span class="text">
+                        <h3>0</h3>
+                        <p>Placed Candidates</p>
+                    </span>
+                </li>
+            </ul>
+            <!-- Filter Section -->
+            <!--  -->
+
+
+            <!-- Recent Enrollments -->
+            <div class="table-data">
+                <div class="order">
+                    <div class="head d-flex justify-content-between align-items-center">
+                        <h3>Recent Enrollments</h3>
+                       <i class="fas fa-search" title="Search" onclick="toggleFilterSection()" style="cursor: pointer;"></i>
+    <!-- Cross icon (hidden by default) -->
+    <i class="fas fa-times" title="Clear Filters" id="clear-filters" onclick="resetFilters()" style="cursor: pointer; display: none;"></i>
+
+                    </div>
+<div class="filter-section" id="filter-section" style="display: none;">
+    <form method="POST" action="{% url 'manager_dashboard_page' %}" onsubmit="showFilteredData()">
+        {% csrf_token %}
+        
+        <div class="row mb-3">
+            <!-- Course Filter -->
+            <div class="col">
+                <select class="form-select" name="course_name">
+                    <option value="">Select Course</option>
+                    <option value="Python Full Stack">Python Full Stack</option>
+                    <option value="Java Full Stack">Java Full Stack</option>
+                    <option value="Data Science">Data Science</option>
+                    <option value="Digital Marketing">Digital Marketing</option>
+                    <option value="UI/UX">UI/UX</option>
+                </select>
+            </div>
+
+            <!-- Date Range Filter -->
+            <div class="col">
+                <select class="form-select" name="date_filter" id="date_filter" onchange="toggleCustomDate()">
+                    <option value="">Select Date Range</option>
+                    <option value="today">Today</option>
+                    <option value="yesterday">Yesterday</option>
+                    <option value="last_3_days">Last 3 Days</option>
+                    <option value="last_7_days">Last 7 Days</option>
+                    <option value="last_month">Last Month</option>
+                    <option value="custom_date">Custom Date Range</option>
+                </select>
+            </div>
+
+            <!-- Enrollment ID Filter -->
+            <div class="col">
+                <input type="text" class="form-control" name="enrollment_id" placeholder="Enrollment ID">
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <!-- Counselor Name Filter -->
+            <div class="col">
+               <input type="text" class="form-control" name="counselor_name" placeholder="Counselor Name">
+            </div>
+
+            <div class="col">
+                <input type="text" class="form-control" name="student_mobile" placeholder="Student Mobile">
+            </div>
+
+            <!-- Leave the last column empty or add another filter here if necessary -->
+            <div class="col">
+                <input type="text" class="form-control" name="student_email" placeholder="Student Email">
+            </div>
+        </div>
+
+        <!-- Custom Date Range Filter -->
+        <div class="row mb-3" id="custom-date" style="display: none;">
+    <!-- Start Date -->
+    <div class="col-md-6">
+        <input type="date" name="start_date" class="form-control" placeholder="Start Date">
+    </div>
+
+    <!-- End Date -->
+    <div class="col-md-6">
+        <input type="date" name="end_date" class="form-control" placeholder="End Date">
+    </div>
+</div>
+
+
+        <!-- Filter Button in separate row -->
+        <div class="row mb-3">
+            <div class="col text-end">
+                <button type="submit" class="btn btn-primary">Filter</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>S.No</th>
+                                <th>Student Name</th>
+                                <th>Enrollment Id</th>
+                                <th>Date of Enrollment</th>
+                                <th>Mobile</th>
+                                <th>Counselor</th>
+                                <th>Payment Status</th>
+                                <th>More</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for student in student_list %}
+                            <tr>
+                                <td>{{ student.s_no }}</td>
+                                <td>{{ student.first_name }} {{ student.last_name }}</td>
+                                <td>{{ student.enrollment_id }}</td>
+                                <td>{{ student.enrolled_on }}</td>
+                                <td>{{ student.mobile }}</td>
+                                <td>{{ student.counselor_name }}</td>
+                                <td>
+                                    <div class="icon-payment">
+                                        <a href="" title="Payment">
+                                            <i class="fa-solid fa-check fa-fade" style="color: orangered;"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                                <td>
+                                    <a href="" title="View" class="icon-view">
+                                        <i class="fas fa-eye" style="color: orangered;"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+
+                   <div class="pagination">
+    {% if student_list.has_previous %}
+        <a class="pagination-btn" href="?page=1">First</a>
+        <a class="pagination-btn" href="?page={{ student_list.previous_page_number }}">Prev</a>
+    {% endif %}
+    
+    <span class="current">
+        Page {{ student_list.number }} of {{ student_list.paginator.num_pages }}.
+    </span>
+    
+    {% if student_list.has_next %}
+        <a class="pagination-btn" href="?page={{ student_list.next_page_number }}">Next</a>
+        <a class="pagination-btn" href="?page={{ student_list.paginator.num_pages }}">Last</a>
+    {% endif %}
+</div>
+                </div>
+            </div>
+
+                        <div class="table-data small-graph">
+                <div class="order">
+                    <div class="head">
+                        <h3>Graph Views</h3>
+                    
+                    </div>
+                <div class="chart-container">
+                    <h4>Counselor Wise</h4>
+                <label for="chartType">Select Chart Type:</label>
+                <select id="chartType" onchange="toggleChart()">
+                    <option value="pie">Pie Chart</option>
+                    <option value="bar">Bar Chart</option>
+                </select>
+
+        <!-- Canvas with adjusted size for a slightly larger view -->
+        <canvas id="pieChart" style="display: none; max-width: 400px; max-height: 400px;"></canvas>
+        <canvas id="barChart" style="display: none; max-width: 400px; max-height: 400px;"></canvas>
+                </div>
+                
+    </div>
+</div>
+        </main>
+    </section>
+    <script>
+    function toggleFilterSection() {
+    var filterSection = document.getElementById("filter-section");
+    var searchIcon = document.querySelector('.fa-search');
+    var clearFiltersIcon = document.getElementById("clear-filters");
+
+    if (filterSection.style.display === "none") {
+        filterSection.style.display = "block";
+        // Switch to show the cross icon
+        searchIcon.style.display = "none";
+        clearFiltersIcon.style.display = "inline-block";
+    } else {
+        filterSection.style.display = "none";
+        // Show the search icon again
+        searchIcon.style.display = "inline-block";
+        clearFiltersIcon.style.display = "none";
+    }
+}
+
+// Toggle visibility of the custom date filter
+function toggleCustomDate() {
+    var customDateDiv = document.getElementById("custom-date");
+    var dateFilter = document.getElementById("date_filter").value;
+    if (dateFilter === "custom_date") {
+        customDateDiv.style.display = "block";
+    } else {
+        customDateDiv.style.display = "none";
+    }
+}
+
+// Reset the filters to show all data
+function resetFilters() {
+    // Reset the form fields to default values
+    document.querySelector('form').reset();
+    
+    // Hide the filter section and show all data
+    var filterSection = document.getElementById("filter-section");
+    filterSection.style.display = "none";
+    
+    // Reset the icons visibility
+    var searchIcon = document.querySelector('.fa-search');
+    var clearFiltersIcon = document.getElementById("clear-filters");
+    
+    searchIcon.style.display = "inline-block";
+    clearFiltersIcon.style.display = "none";
+
+    // Optionally, trigger form submission if you need the page to reload with all data
+    // document.querySelector('form').submit();  // Uncomment if you want to submit the form to reset the filters in the backend
+}
+    </script>
+
+    <script>
+
+        // Convert Django data to JavaScript
+        const counselorData = {
+        labels: {{ course_labels|safe }},   // Rendered as a JavaScript array
+        data: {{ course_data|safe }}        // Rendered as a JavaScript array
+    };
+
+        let pieChart, barChart;
+
+        // Initialize Pie Chart
+        function initPieChart() {
+            const ctx = document.getElementById("pieChart").getContext("2d");
+            pieChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: counselorData.labels,
+                    datasets: [{
+                        data: counselorData.data,
+                        backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#66BB6A", "#FF7043"],
+                    }]
+                }
+            });
+        }
+
+        // Initialize Bar Chart
+        function initBarChart() {
+            const ctx = document.getElementById("barChart").getContext("2d");
+            barChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: counselorData.labels,
+                    datasets: [{
+                        label: 'Enrollments',
+                        data: counselorData.data,
+                        backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#66BB6A", "#FF7043"],
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        // Toggle Chart Display
+        function toggleChart() {
+            const chartType = document.getElementById("chartType").value;
+
+            // Destroy existing charts if they exist
+            if (pieChart) {
+                pieChart.destroy();
+                pieChart = null;
+            }
+            if (barChart) {
+                barChart.destroy();
+                barChart = null;
+            }
+
+            // Display and initialize the selected chart
+            if (chartType === "pie") {
+                document.getElementById("pieChart").style.display = "block";
+                document.getElementById("barChart").style.display = "none";
+                initPieChart();
+            } else if (chartType === "bar") {
+                document.getElementById("pieChart").style.display = "none";
+                document.getElementById("barChart").style.display = "block";
+                initBarChart();
+            }
+        }
+
+        // Initial load with Pie Chart visible
+        window.onload = () => {
+            document.getElementById("chartType").value = "pie";
+            toggleChart();
+        };
+    </script>
+</body>
+</html>

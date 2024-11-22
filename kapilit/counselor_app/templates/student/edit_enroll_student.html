@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Boxicons -->
+    {% load static %}
+    <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/dashboard_style.css' %}">
+    <title>Edit Student Enrollment</title>
+</head>
+<body>
+
+<section id="sidebar">
+    <a href="#" class="brand">
+        <img src="{% static 'images/kapil_logo.png' %}" alt="Kapil IT Logo" class="kapil-it-logo">
+    </a>
+    <ul class="side-menu top">
+        <li>
+            <a href="#">
+                <i class='bx bxs-dashboard'></i>
+                <span class="text">Dashboard</span>
+            </a>
+        </li>
+        <li class="active">
+            <a href="">
+                <i class='bx bxs-pencil'></i>
+                <span class="text">Edit Student Details</span>
+            </a>
+        </li>
+        <li>
+            <a href="#" class="logout">
+                <i class='bx bxs-log-out-circle'></i>
+                <span class="text">Logout</span>
+            </a>
+        </li>
+    </ul>
+</section>
+
+<section id="content">
+    <nav>
+        <i class='bx bx-menu'></i>
+        <a href="#" class="nav-link">Email : {{ employee_details.employee_email }}</a>
+    </nav>
+
+    <main>
+        <div class="head-title">
+            <div class="left">
+                <h1>Edit Student Enrollment</h1>
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-success" role="alert">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+                <ul class="breadcrumb">
+                    <li><a href="#">Dashboard</a></li>
+                    <li><i class='bx bx-chevron-right'></i></li>
+                    <li><a class="active" href="#">Edit Enrollment</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Enrollment Form -->
+        <div class="table-data">
+            <div class="order">
+                <div class="head">
+                    <h3>Enrollment Form</h3>
+                </div>
+                <form method="POST" action="">
+                    {% csrf_token %}
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="first_name" class="form-label">First Name</label>
+                            <input type="text" class="form-control" id="first_name" name="first_name" value="{{ student.first_name }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="last_name" class="form-label">Last Name</label>
+                            <input type="text" class="form-control" id="last_name" name="last_name" value="{{ student.last_name }}" required>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" name="email" value="{{ student.email }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="mobile" class="form-label">Mobile</label>
+                            <input type="text" class="form-control" id="mobile" name="mobile" value="{{ student.mobile }}" required>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="location" class="form-label">Location</label>
+                            <select class="form-select" id="location" name="location" required>
+                                <option value="Nanakramguda-Hub" {% if student.location == "Nanakramguda-Hub" %}selected{% endif %}>Nanakramguda-Hub</option>
+                                <option value="Ameerpet" {% if student.location == "Ameerpet" %}selected{% endif %}>Ameerpet</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="mode_of_attending" class="form-label">Mode of Attending</label>
+                            <select class="form-select" id="mode_of_attending" name="mode_of_attending" required>
+                                <option value="Online" {% if student.mode_of_attending == "Online" %}selected{% endif %}>Online</option>
+                                <option value="Offline" {% if student.mode_of_attending == "Offline" %}selected{% endif %}>Offline</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="qualification" class="form-label">Qualification</label>
+                            <select class="form-select" id="qualification" name="qualification" required onchange="updateBranches()">
+                                <option value="inter" {% if student.qualification == "inter" %}selected{% endif %}>Inter</option>
+                                <option value="diploma" {% if student.qualification == "diploma" %}selected{% endif %}>Diploma</option>
+                                <option value="degree" {% if student.qualification == "degree" %}selected{% endif %}>Degree</option>
+                                <option value="btech" {% if student.qualification == "btech" %}selected{% endif %}>Bachelor Technology</option>
+                                <option value="mtech" {% if student.qualification == "mtech" %}selected{% endif %}>Master Technology</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="branch" class="form-label">Select Branch</label>
+                            <select class="form-select" id="branch" name="branch" required>
+                                <option value="{{ student.branch }}" selected>{{ student.branch }}</option>
+                            </select>
+                        </div>
+
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="course_name" class="form-label">Select Course</label>
+                            <select class="form-select" id="course_name" name="course_name" required onchange="updateCourseAmount()">
+                                <option value="Python Full Stack" {% if student.course_name == "Python Full Stack" %}selected{% endif %}>Python Full Stack</option>
+                                <option value="Java Full Stack" {% if student.course_name == "Java Full Stack" %}selected{% endif %}>Java Full Stack</option>
+                                <option value="Data Science" {% if student.course_name == "Data Science" %}selected{% endif %}>Data Science</option>
+                                <option value="Digital Marketing" {% if student.course_name == "Digital Marketing" %}selected{% endif %}>Digital Marketing</option>
+                                <option value="UI/UX" {% if student.course_name == "UI/UX" %}selected{% endif %}>UI/UX</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="course_amount" class="form-label">Course Amount</label>
+                            <input type="text" class="form-control" id="course_amount" name="course_amount" value="{{ student.course_amount }}" readonly>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="discount_amount" class="form-label">Discount Amount</label>
+                            <input type="text" class="form-control" id="discount_amount" name="discount_amount" value ="{{student.discount_amount}}" oninput="calculateTotalAmount()">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="total_amount" class="form-label">Total Amount</label>
+                            <input type="text" class="form-control" id="total_amount" name="total_amount" value="{{student.total_amount}}" readonly>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="gender" class="form-label">Gender</label>
+                                <select class="form-select" id="gender" name="gender" required>
+                                    <option value="male" {% if student.gender == "male" %}selected{% endif %}>Male</option>
+                                    <option value="female"{% if student.gender == "female" %}selected{% endif %}>Female</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="education_status" class="form-label">Education Status</label>
+                                <select class="form-select" id="education_status" name="education_status" required onchange="showEducationDetails()">
+                                    <option value="completed" {% if student.education_status == "completed" %}selected{% endif %}>Completed</option>
+                                    <option value="in_progress"{% if student.education_status == "in_progress" %}selected{% endif %}>In Progress</option>
+                                </select>
+                            </div>
+                        </div>
+
+
+
+                    <div id="education_details_completed" style="display: {% if student.education_status == 'Completed' %}block{% else %}{% endif %};">
+                        <h4>Education Details (Completed)</h4>
+                        <div class="row mb-3">
+                            
+                            <div class="col-md-6">
+                                <label for="completed_year" class="form-label">Year of Completion</label>
+                                <input type="text" class="form-control" id="completed_year" name="completed_year" value="{{ student.passed_year }}">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="education_details_in_progress" style="display: {% if student.education_status == 'In Process' %}block{% else %}none{% endif %};">
+                        <h4>Education Details (In Progress)</h4>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="current_year" class="form-label">Current Year</label>
+                                <select class="form-select" id="current_year" name="current_year" required>
+                                    <option value="1st Year"{% if student.current_year == "1st Year" %}selected{% endif %}>1st Year</option>
+                                    <option value="2nd Year" {% if student.current_year == "2nd Year" %}selected{% endif %}>2nd Year</option>
+                                    <option value="3rd Year" {% if student.current_year == "3rd Year" %}selected{% endif %}>3rd Year</option>
+                                    <option value="Final Year" {% if student.current_year == "Final Year" %}selected{% endif %}>Final Year</option>
+                                </select>
+                                
+                            </div>
+                            
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Update Enrollment</button>
+                </form>
+            </div>
+        </div>
+    </main>
+</section>
+
+<script>
+    function showEducationDetails() {
+        var educationStatus = document.getElementById('education_status').value;
+        document.getElementById('education_details_completed').style.display = (educationStatus === 'completed') ? 'block' : 'none';
+        document.getElementById('education_details_in_progress').style.display = (educationStatus === 'in_progress') ? 'block' : 'none';
+    }
+
+    function updateBranches() {
+        // This function can contain logic to update branches based on selected qualification.
+    }
+
+    function updateCourseAmount() {
+        var courseAmount = 0;
+        var courseName = document.getElementById('course_name').value;
+
+        switch (courseName) {
+            case 'Python Full Stack':
+                courseAmount = 25000;
+                break;
+            case 'Java Full Stack':
+                courseAmount = 30000;
+                break;
+            case 'Data Science':
+                courseAmount = 28000;
+                break;
+            case 'Digital Marketing':
+                courseAmount = 20000;
+                break;
+            case 'UI/UX':
+                courseAmount = 15000;
+                break;
+        }
+
+        document.getElementById('course_amount').value = courseAmount;
+        calculateTotalAmount();
+    }
+
+    function calculateTotalAmount() {
+        var courseAmount = parseFloat(document.getElementById('course_amount').value) || 0;
+        var discountAmount = parseFloat(document.getElementById('discount_amount').value) || 0;
+        var totalAmount = courseAmount - discountAmount;
+        document.getElementById('total_amount').value = totalAmount;
+    }
+
+    // Initial call to set the correct education details display
+    showEducationDetails();
+
+    function updateBranches() {
+    var qualification = document.getElementById("qualification").value;
+    var branchSelect = document.getElementById("branch");
+    var currentBranch = branchSelect.value; // Get the currently selected branch
+
+    branchSelect.innerHTML = '<option value="">Select Branch</option>'; // Clear previous options
+    
+    var branches = {
+        "inter": ["MPC", "BIPC", "CEC"],
+        "diploma": ["Civil Engineering", "Electrical Engineering", "Mechanical Engineering"],
+        "degree": ["B.Sc", "B.Com"],
+        "btech": ["Computer Science Engineering", "Information Technology", "Civil Engineering", "Electrical Engineering", "Mechanical Engineering"],
+        "mtech": ["M.Tech in CSE", "M.Tech in ECE"]
+    };
+
+    // Populate the branch options based on the qualification
+    branches[qualification]?.forEach(function(branch) {
+        var option = document.createElement("option");
+        option.value = branch;
+        option.textContent = branch;
+        branchSelect.appendChild(option);
+    });
+
+    // If the current branch is in the new options, reselect it
+    if (currentBranch && branches[qualification]?.includes(currentBranch)) {
+        var selectedOption = document.createElement("option");
+        selectedOption.value = currentBranch;
+        selectedOption.textContent = currentBranch;
+        selectedOption.selected = true; // Set this option as selected
+        branchSelect.appendChild(selectedOption);
+    }
+}
+
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

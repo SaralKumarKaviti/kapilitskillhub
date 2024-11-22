@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Method Selection</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/payment_style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/payment_container.css' %}">
+    <link rel="stylesheet" href="{% static 'css/modal_style.css' %}">
+    
+</head>
+<body>
+    <div class="payment-container">
+        <h2>Select Your Payment Method</h2>
+        <form action="{% url 'register_payment_enrolled_student' student_id=student_id %}" method="POST" id="payment-form">
+            {% csrf_token %}
+            <div class="student-info">
+                <p><strong>Student Name:</strong> {{ student_name }}</p>
+                <p><strong>Course Name:</strong> {{ course_name }}</p>
+            </div>
+
+            <div class="radio-group">
+                <input type="radio" id="offline" name="payment_mode" value="offline" required onclick="openModal()">
+                <label for="offline">Offline</label>
+                
+                <input type="radio" id="online" name="payment_mode" value="online" required onclick="openModal()">
+                <label for="online">Online</label>
+                
+            </div>
+        </form>
+    </div>
+
+    <!-- Modal Window -->
+    <div id="paymentModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h3>Payment Details</h3><br>
+            <div>
+                <label>Registration Fee:</label>
+                <input type="text" value="{{ registration_fee }}" readonly>
+            </div>
+            <button type="submit" class="submit-btn" form="payment-form">Proceed to Payment</button>
+        </div>
+    </div>
+
+    <script>
+        function openModal() {
+            document.getElementById("paymentModal").style.display = "block";
+        }
+
+        function closeModal() {
+            document.getElementById("paymentModal").style.display = "none";
+        }
+    </script>
+</body>
+</html>

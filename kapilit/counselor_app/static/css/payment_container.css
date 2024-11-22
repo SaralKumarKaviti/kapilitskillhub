@@ -1,0 +1,138 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body Styling */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f7fa;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Payment Container */
+.payment-container {
+    background-color: #ffffff;
+    width: 90%;
+    max-width: 600px;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+h2 {
+    color: #333;
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+}
+
+/* Student Information Section */
+.student-info p {
+    font-size: 1rem;
+    color: #555;
+    margin: 10px 0;
+}
+
+/* Radio Group */
+.radio-group {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 15px;
+}
+
+.radio-group label {
+    font-size: 1rem;
+    color: #444;
+}
+
+.radio-group input[type="radio"] {
+    accent-color: #4CAF50;
+}
+
+/* Proceed Button */
+.submit-btn {
+    background-color: #4CAF50;
+    color: #fff;
+    font-size: 1rem;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background-color 0.3s;
+}
+
+.submit-btn:hover {
+    background-color: #45a049;
+}
+
+/* Payment Details Section */
+#payment-details {
+    margin-top: 30px;
+    text-align: left;
+}
+
+#payment-details h3 {
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+#payment-details label {
+    display: block;
+    font-size: 1rem;
+    color: #666;
+    margin-bottom: 5px;
+}
+
+#payment-details input[type="text"],
+#payment-details input[type="number"] {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    font-size: 1rem;
+}
+
+/* Installment Button */
+#payment-details button {
+    background-color: #007BFF;
+    color: #fff;
+    font-size: 1rem;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    margin-left: 10px;
+    transition: background-color 0.3s;
+}
+
+#payment-details button:hover {
+    background-color: #0056b3;
+}
+
+/* Total and Pending Amounts */
+#total-paid, #pending-amount {
+    background-color: #e0f7fa;
+    color: #333;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+    .payment-container {
+        padding: 15px;
+    }
+
+    h2 {
+        font-size: 1.6rem;
+    }
+}
